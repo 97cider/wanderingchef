@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityStandardAssets.CrossPlatformInput;
 public class fMovement : MonoBehaviour {
 
     public GameObject Ground;
@@ -13,12 +13,15 @@ public class fMovement : MonoBehaviour {
         playerAngle = player.transform.rotation;
     }
 	void Update () {
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
-        var y = diffAng.eulerAngles - playerAngle.eulerAngles;
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * 3.0f;
-        Debug.Log("Player EulerY" + playerAngle.eulerAngles.y);
+        Vector2 joystickPos = new Vector2(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"));
+        var z = joystickPos.x * Time.deltaTime * 3.0f;
+        var x = joystickPos.y * Time.deltaTime * 3.0f;
+        //var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
+        //var y = diffAng.eulerAngles - playerAngle.eulerAngles;
+        //var x = Input.GetAxis("Horizontal") * Time.deltaTime * 3.0f;
+        //Debug.Log("Player EulerY" + playerAngle.eulerAngles.y);
 
-        transform.Rotate(diffAng.eulerAngles - playerAngle.eulerAngles);
-        transform.Translate(x, y.y, z);
+        //transform.Rotate(diffAng.eulerAngles - playerAngle.eulerAngles);
+        transform.Translate(z, 0, x);
     }
 }
