@@ -16,6 +16,11 @@ public class gMovement : MonoBehaviour {
         currentTile = startingTile;
     }
 
+    public IEnumerable catchBreath()
+    {
+        yield return new WaitForSeconds(.5f); 
+    }
+
     public bool checkNorth (GameObject tile)
     {
         if (tile.GetComponent<tileLayout>().nTile.tag != "Water" && tile.GetComponent<tileLayout>().nTile != worldEnd)
@@ -52,6 +57,7 @@ public class gMovement : MonoBehaviour {
 
     public bool checkEast(GameObject tile)
     {
+ 
         if (tile.GetComponent<tileLayout>().eTile.tag != "Water" && tile.GetComponent<tileLayout>().eTile != worldEnd)
         {
             return true;
@@ -88,7 +94,6 @@ public class gMovement : MonoBehaviour {
             Debug.Log("Player cannot move to the sout");
         }
     }
-
     public void MoveWest()
     {
         if (checkWest(currentTile))
@@ -115,8 +120,45 @@ public class gMovement : MonoBehaviour {
             Debug.Log("Player cannot move to the east");
         }
     }
-    void Update()
+    IEnumerator MoveNorthCR()
+    {
+        MoveNorth();
+        yield return new WaitForSeconds(1);
+    }
+    IEnumerator MoveSouthCR()
+    {
+        MoveSouth();
+        yield return new WaitForSeconds(1);
+    }
+    IEnumerator MoveWestCR()
+    {
+        MoveWest();
+        yield return new WaitForSeconds(1);
+    }
+    IEnumerator MoveEastCR()
+    {
+        MoveEast();
+        yield return new WaitForSeconds(1);
+    }
+    void FixedUpdate()
     {
         Vector2 joystickPos = new Vector2(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"));
+        //Debug.Log("X: " + joystickPos.x + "  ||  " + "Y: " + joystickPos.y);
+        if (joystickPos.x == 1)
+        {
+            StartCoroutine(MoveEastCR());
+        }
+        if (joystickPos.x == -1)
+        {
+            StartCoroutine(MoveWestCR());
+        }   
+        if (joystickPos.y == 1)
+        {
+            StartCoroutine(MoveNorthCR());
+        }
+        if (joystickPos.y == -1)
+        {
+            StartCoroutine(MoveSouthCR());
+        }
     }
 }
